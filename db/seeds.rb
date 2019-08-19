@@ -10,29 +10,45 @@ User.destroy_all
 Event.destroy_all
 Attendance.destroy_all
 
-20.times do 
+#Création de pierre michel
+email = "pierre.michel@yopmail.com"
+description = "Salut, moi c'est Pierre Michel, je suis un User de test"
+first_name = "Pierre"
+last_name = "Michel"
+password = "azerty" #password très safe, je recommande vivement
+User.create(email:email, description:description, first_name:first_name, last_name:last_name, password: password, password_confirmation: password)
+
+#Création de users
+10.times do
+	email = Faker::Internet.email
+	description = Faker::TvShows::Community.quotes
 	first_name = Faker::Name.first_name
 	last_name = Faker::Name.last_name
-	email = "#{first_name}.#{last_name}@yopmail.com"
-	User.create(email: email, encrypted_password: Faker::Internet.password,
-description: Faker::Lorem.characters, first_name: first_name, last_name: last_name)
+	password = "azerty" #password très safe, je recommande vivement
+	User.create(email:email, description:description, first_name:first_name, last_name:last_name, password: password, password_confirmation: password)
 end
 
-
-5.times do
-	e = Event.new(start_date: Faker::Time.forward(days: 23).to_datetime,
-		duration: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].sample,
-		title: Faker::Book.title, description: Faker::Lorem.words, price: rand(1..1000), location: Faker::Address.city, admin: User.all.sample)
-	until e.save
-		e = Event.new(start_date: Faker::Time.forward(days: 23),
-		duration: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].sample,
-		title: Faker::Book.title, description: Faker::Lorem.words, price: rand(1..1000), location: Faker::Address.city, admin: User.all.sample)
+#Créations d'events
+15.times do
+	start_date = Faker::Time.forward(days: 60)
+	duration = rand(9)*60 + rand(12)*5 + 5
+	title = Faker::Music::RockBand.name
+	while title.length <= 5
+		title += " " + Faker::Music::RockBand.name
 	end
+	description = Faker::Movies::StarWars.quote
+	while description.length <= 100
+		description += " " + Faker::Movies::StarWars.quote
+	end
+	price = rand(1..1000)
+	location = Faker::Address.full_address
+	admin = User.all.sample
+	Event.create(start_date:start_date, duration:duration, title:title, description:description, price:price, location:location, admin:admin)
 end
 
-5.times do
-	a = Attendance.new(user: User.all.sample, attended_event: Event.all.sample)
-	until a.save
-		a = Attendance.new(user: User.all.sample, attended_event: Event.all.sample)
+# Création d'attendances
+	5.times do
+		a = Attendance.create(user: User.all.sample, attended_event: Event.all.sample)
 	end
-end
+
+

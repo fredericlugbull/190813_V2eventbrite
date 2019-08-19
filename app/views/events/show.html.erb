@@ -1,0 +1,54 @@
+<div class="container">
+  <h2><%=@event.title %></h2>
+  <div class="bd-example">
+    <dl>
+      <dt>Description</dt>
+      <dd><%=@event.description%> </dd>
+      <dt>Creator</dt>
+      <dd><%= @event.admin.email %></dd>
+      <dt>Location</dt>
+      <dd><%= @event.location %></dd>
+      <dt>Start date</dt> 
+      <dd>From <%= @event.start_date%> to <%= @end_date%></dd>
+      <dt>Price</dt> 
+      <dd><%= @event.price%> $</dd>
+    </dl>
+  </div>
+</div>
+<div class="container">
+<% unless @users.count == 0%>
+<h1><%=@users.count%> Attendees</h1>
+
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">First name</th> 
+        <th scope="col">Last name</th> 
+        <th scope="col">Email</th> 
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+      <%if user == current_user%>
+        <tr>
+          <td><%= user.first_name %></td>
+          <td><%= user.last_name %></td>
+          <td><%= user.email %><br/><%=link_to "Delete your attendance", "/attendances/#{@attendance.id}", method: :delete, class:"btn text-white btn-danger btn-sm"%></td>
+        </tr> 
+        <%else%>
+          <tr>
+          <td><%= user.first_name %></td>
+          <td><%= user.last_name %></td>
+          <td><%= user.email %></td>
+        </tr> 
+        <%end%>
+      <% end %>
+    </tbody>
+  </table>
+<%=link_to "Registrate", attendances_path(@event), method: :post, class:"btn text-white btn-success btn-sm"%>
+<%else%>
+<h1><%=@users.count%> Attendee for the moment</h1>
+<h2>Be the first to registrate for this event : <%=link_to "Registrate", attendances_path(@event), method: :post, class:"btn text-white btn-success btn-sm"%></h2>
+<%end%>
+</div>

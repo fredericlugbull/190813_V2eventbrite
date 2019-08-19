@@ -5,11 +5,84 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-light" style="background-color: #e3f2fd;">
+      <div class="navbar-brand"><%= link_to "Home", root_path %></div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <div class="nav-link"><%= link_to "Create a new event", new_event_path %></div>
+          </li>
+          <% if user_signed_in?%>
+              <li class='nav-item'>
+                <div class="navbar-link">
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      My profil
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item color-black" href="<%=user_path(current_user.id)%>"><p>See my profil</p></a>
+                      <a class="dropdown-item color-black" href="<%=edit_user_registration_path%>"><p>Edit my password/email</p></a>
+                      <a class="dropdown-item color-black" href="<%=edit_user_path(current_user.id)%>"><p>Edit my information</p></a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+          <% end %>
+        </ul>
+
+        <%unless user_signed_in? %>
+          <div class='flex-row'>
+            <div class="navbar-text">
+              <p><%=fa_icon('lock')%></p>
+            </div>
+            <div class="navbar-text">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Login/Signup
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item color-black" href="<%=new_user_registration_path%>"><p>Sign up</p></a>
+                  <a class="dropdown-item color-black" href="<%=new_user_session_path%>"><p>Login</p></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <%else%>
+          <div class='flex'>
+            <span class="navbar-text">
+              <p><%=fa_icon('unlock')%></p>
+            </span>
+            <span class="navbar-text">
+                <p><%=current_user.email%></p>
+            </span>
+            <span class="navbar-text">
+              <%= link_to"Disconnect", destroy_user_session_path , method: :delete, class:"btn btn-danger"%>
+            </span>
+          </div>
+        <%end%>
+      </div>
+    </nav>
+
+    <% flash.each do |key, value| %>
+        <div class="alert alert-<%= key %>" role='alert'><%= value %></div>
+      <% end %>
+
+
     <%= yield %>
   </body>
 </html>
